@@ -6,9 +6,9 @@ class SteepestAscentResult(BaseResult):
         self._iteration = 0
 
     @property
-    def iteration(self):
+    def iteration(self) -> int:
         return self._iteration
     
     @iteration.setter
-    def iteration(self, value: int):
+    def iteration(self, value: int) -> None:
         self._iteration = value
