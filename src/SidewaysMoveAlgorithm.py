@@ -37,6 +37,8 @@ class SidewaysMoveAlgorithm(BaseAlgorithm):
             if neighboor.value == current_state.value:
                 sideways_iter += 1
                 pass
+            else: 
+                sideways_iter = 0
 
             result.add_state(current_state)
             current_state = neighboor
