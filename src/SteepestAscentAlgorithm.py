@@ -20,7 +20,7 @@ class SteepestAscentAlgorithm(BaseAlgorithm):
         if initial_state.value == 0:
             duration = datetime.now() - start_time
             result.add_state(initial_state)
-            result.duration(duration)
+            result.duration = duration.total_seconds()
             return result
         else:
             current_state = initial_state
@@ -29,14 +29,14 @@ class SteepestAscentAlgorithm(BaseAlgorithm):
             neighboor = Utility.getBestSuccessor(current_state)
 
             #Steepest Ascent
-            if not sideways_move and neighboor.value <= current_state.value:
+            if not sideways_move and not random_restart and neighboor.value <= current_state.value:
                 duration = datetime.now() - start_time
-                result.duration(duration)
+                result.duration = duration.total_seconds()
                 return result
             # Sideways Move
             if sideways_move and neighboor.value < current_state.value:
                 duration = datetime.now() - start_time
-                result.duration(duration)
+                result.duration = duration.total_seconds()
                 return result
             #Random restart
             if random_restart and neighboor.value < current_state.value:
@@ -48,5 +48,5 @@ class SteepestAscentAlgorithm(BaseAlgorithm):
             #Global maximum
             if current_state.value == 0:
                 duration = datetime.now() - start_time
-                result.duration(duration)
+                result.duration = duration.total_seconds()
                 return result
