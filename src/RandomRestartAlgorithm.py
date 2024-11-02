@@ -3,6 +3,7 @@ from State import State
 from BaseResult import BaseResult
 
 class RandomRestart(steep):
+    @staticmethod
     def solve(initial_state: State) -> BaseResult:        
         """
         This function take initial_state as the input
