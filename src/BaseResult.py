@@ -11,7 +11,7 @@ class BaseResult:
         self._objective_function_history.append(state.objective_value)
 
     @property
-    def state_history(self) -> State:
+    def state_history(self) -> List[State]:
         return self._state_history
 
     @property
