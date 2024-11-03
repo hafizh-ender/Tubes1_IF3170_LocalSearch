@@ -39,5 +39,9 @@ class Utility:
             if successor_state.value > best_value:
                 best_value = successor_state.value
                 best_state = successor_state
-        
+
+            if successor_state.value == best_value and random.choice([True, False]):
+                best_state = successor_state
+       # print(best_state.cube.values[coordinate1[0], coordinate1[1], coordinate1[2]], best_state.cube.values[coordinate2[0], coordinate2[1], coordinate2[2]])
+
         return best_state
