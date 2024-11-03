@@ -15,15 +15,13 @@ class SimulatedAnnealingAlgorithm(BaseAlgorithm):
         current_state = initial_state
         result = SimulatedAnnealingResult()
         
-        iteration = 0
-        
         while True:
             if verbose:
-                print(f"Iteration: {iteration}. Value: {current_state.value}")
+                print(f"Iteration: {result.iteration}. Value: {current_state.value}")
             
             result.add_state(state=current_state)
             
-            temperature = SimulatedAnnealingAlgorithm.schedule(initial_temperature=initial_temperature, iter=iteration, method=method)
+            temperature = SimulatedAnnealingAlgorithm.schedule(initial_temperature=initial_temperature, iter=result.iteration, method=method)
             if abs(temperature) < 1e-10:
                 duration = datetime.now() - start_time
                 result.duration = duration.total_seconds()
@@ -41,7 +39,7 @@ class SimulatedAnnealingAlgorithm(BaseAlgorithm):
                 if np.exp(deltaE / temperature) > threshold:
                     current_state = neighbour_state
             
-            iteration += 1
+            result.iteration += 1
             
     @staticmethod
     def schedule(initial_temperature: float, iter: int, method: str = "linear") -> float:
