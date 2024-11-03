@@ -12,7 +12,7 @@ from Cube import Cube
 class Individual:
     def __init__(self, state: State):
         self._state = state
-        self._max_fitness_value = 3 * self._state.cube.dim ** 2 + 6 * self._state.cube.dim + 4
+        self._max_fitness_value = 3 * self._state.dim ** 2 + 6 * self._state.dim + 4
         self._fitness_value = self._max_fitness_value + self._state.value
 
     def __lt__(self, other):
@@ -73,7 +73,7 @@ class GeneticAlgorithm(BaseAlgorithm):
                 parent2 = GeneticAlgorithm.chooseParent(current_population)
                 
                 child1_string, child2_string = GeneticAlgorithm.crossoverPartiallyMapped(
-                    parent1.state.cube.values.ravel(), parent2.state.cube.values.ravel()
+                    parent1.state.cube.ravel(), parent2.state.cube.ravel()
                 )
                 
                 if np.random.rand() > 0.1:
@@ -82,12 +82,12 @@ class GeneticAlgorithm(BaseAlgorithm):
                     child2_string = GeneticAlgorithm.mutateSwap(child2_string)
                 
                 new_population.extend([
-                    Individual(state=State(cube=Cube(values=child1_string.reshape(5, 5, 5)))),
-                    Individual(state=State(cube=Cube(values=child2_string.reshape(5, 5, 5))))
+                    Individual(state=State(cube=child1_string.reshape(5, 5, 5))),
+                    Individual(state=State(cube=child2_string.reshape(5, 5, 5)))
                 ])
             
             # if new_population[0].fitness_value > current_population[0].fitness_value:
-            #     current_population = new_population
+            current_population = new_population
         
         result.iteration = iteration
         return result
