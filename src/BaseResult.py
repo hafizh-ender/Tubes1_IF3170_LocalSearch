@@ -8,7 +8,7 @@ class BaseResult:
 
     def add_state(self, state: State) -> None:
         self._state_history.append(state)
-        self._objective_function_history.append(state.objective_value)
+        self._objective_function_history.append(state.value)
 
     @property
     def state_history(self) -> List[State]:
