@@ -33,3 +33,7 @@ class Cube:
             self._values = new_values
         else:
             raise ValueError("Values array dimensions do not match the cube's dimension")
+    
+    def __copy__(self):
+        new_copy = Cube(values=self._values.copy())
+        return new_copy
