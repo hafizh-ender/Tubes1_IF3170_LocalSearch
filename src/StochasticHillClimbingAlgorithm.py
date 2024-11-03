@@ -1,20 +1,19 @@
 from BaseAlgorithm import BaseAlgorithm
-from StochasticHillClimbingResult import StochasticHillClimbingResult
 from Utility import Utility
+from State import State
+
+from StochasticHillClimbingResult import StochasticHillClimbingResult
 
 import numpy as np
-
 from datetime import datetime
 
 class StochasticHillClimbingAlgorithm(BaseAlgorithm):
     @staticmethod
-    def solve(initial_state, iteration_max=1000, verbose=False):
+    def solve(initial_state: State, iteration_max: int = 1000, verbose: bool = False) -> StochasticHillClimbingResult:
         start_time = datetime.now()
         
         current_state = initial_state
-        
         result = StochasticHillClimbingResult()
-        result.iteration = iteration_max
         
         for iteration in range(iteration_max):
             if verbose:
@@ -28,6 +27,8 @@ class StochasticHillClimbingAlgorithm(BaseAlgorithm):
                 current_state = neighbour_state
                 
         duration = datetime.now() - start_time
-            
         result.duration = duration.total_seconds()
+        
+        result.iteration = iteration
+        
         return result

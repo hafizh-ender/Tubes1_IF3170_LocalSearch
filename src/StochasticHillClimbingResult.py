@@ -1,4 +1,5 @@
 from BaseResult import BaseResult
+
 import numpy as np
 
 class StochasticHillClimbingResult(BaseResult):
@@ -6,15 +7,10 @@ class StochasticHillClimbingResult(BaseResult):
         super().__init__()
         self._iteration = None
 
-    def add_state(self, state):
-        super().add_state(state)
-
     @property
-    def iteration(self):
+    def iteration(self) -> int:
         return self._iteration
     
     @iteration.setter
-    def iteration(self, value):
+    def iteration(self, value: int) -> None:
         self._iteration = value
-    
-    
