@@ -46,7 +46,7 @@ class Individual:
 
 class GeneticAlgorithm(BaseAlgorithm):
     @staticmethod
-    def solve(initial_states: List[State], iteration_max: int = 1000, verbose: bool = False) -> GeneticAlgorithmResult:
+    def solve(initial_states: List[State], iteration_max: int = 1000, verbose: bool = False, hill_climbing_heuristic: bool = False) -> GeneticAlgorithmResult:
         start_time = datetime.now()
         
         current_population = [Individual(state=state) for state in initial_states]
@@ -63,7 +63,11 @@ class GeneticAlgorithm(BaseAlgorithm):
             result.add_state(state=fittest_individual.state, population=[individual.state for individual in current_population])
             
             if fittest_individual.is_fitness_value_maximum():
+                duration = datetime.now() - start_time
+                result.duration = duration.total_seconds()
+                
                 result.iteration = iteration
+                
                 return result
             
             # Generate new population
@@ -86,10 +90,14 @@ class GeneticAlgorithm(BaseAlgorithm):
                     Individual(state=State(cube=child2_string.reshape(5, 5, 5)))
                 ])
             
-            # if new_population[0].fitness_value > current_population[0].fitness_value:
-            current_population = new_population
+            if (not hill_climbing_heuristic) or (new_population[0].fitness_value > current_population[0].fitness_value):
+                current_population = new_population
         
+        duration = datetime.now() - start_time
+        result.duration = duration.total_seconds()
+
         result.iteration = iteration
+        
         return result
 
     @staticmethod
