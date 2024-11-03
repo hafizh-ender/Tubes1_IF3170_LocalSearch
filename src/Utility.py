@@ -40,8 +40,6 @@ class Utility:
 
             # diagonal
             conflict += np.sum(np.diagonal(frame)) != magic_number
-
-            # anti-diagonal
             conflict += np.sum(np.fliplr(frame).diagonal()) != magic_number
 
             # pillars
@@ -55,8 +53,15 @@ class Utility:
             diagonals[1] += state.cube[i][i][n - 1 - i]
             diagonals[2] += state.cube[i][n - 1 - i][i]
             diagonals[3] += state.cube[i][n - 1 - i][n - 1 - i]
-
         conflict += np.count_nonzero(diagonals != magic_number)
+
+        for i in range(n):
+            conflict += np.sum(state.cube[range(n), range(n), i]) != magic_number
+            conflict += np.sum(state.cube[range(n), n - 1 - np.arange(n), i]) != magic_number
+
+        for i in range(n):
+            conflict += np.sum(state.cube[range(n), i, range(n)]) != magic_number
+            conflict += np.sum(state.cube[range(n), i, n - 1 - np.arange(n)]) != magic_number
 
         return -conflict
 
