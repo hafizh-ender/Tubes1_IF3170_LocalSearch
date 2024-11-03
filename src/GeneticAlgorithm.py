@@ -7,7 +7,6 @@ from GeneticAlgorithmResult import GeneticAlgorithmResult
 
 from Utility import Utility
 from State import State
-from Cube import Cube
 
 class Individual:
     def __init__(self, state: State):
