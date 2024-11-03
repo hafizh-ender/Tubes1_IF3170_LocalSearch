@@ -28,16 +28,7 @@ class Utility:
     
     @staticmethod
     def getBestSuccessor(state):
-        best_state = None
-        best_value = float('-inf')
-        
         coordinate_pairs = Utility.generateCoordinatePairs(state.cube.dim)
-        
-        for coordinate1, coordinate2 in coordinate_pairs:
-            successor_state = Utility.getNeighbour(state, coordinate1, coordinate2)
-            
-            if successor_state.value > best_value:
-                best_value = successor_state.value
-                best_state = successor_state
+        best_state = max((Utility.getNeighbour(state, coord1, coord2) for coord1, coord2 in coordinate_pairs))
         
         return best_state
