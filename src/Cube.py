@@ -5,8 +5,8 @@ from typing import Optional
 class Cube:
     def __init__(self, dim: int = 5, values: Optional[np.ndarray] = None):
         if values is not None:
-            self._values: np.ndarray = values
-            self._dim: int = values.shape[0]
+            self._values = values
+            self._dim = values.shape[0]
         else:
             self._values = np.arange(1, dim ** 3 + 1)
             np.random.shuffle(self._values)
