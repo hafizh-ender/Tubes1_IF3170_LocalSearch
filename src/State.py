@@ -27,16 +27,16 @@ class State:
         return self._value >= other._value
 
     @property
-    def cube(self):
+    def cube(self) -> Cube:
         return self._cube
 
     @cube.setter
-    def cube(self, new_cube: Cube):
+    def cube(self, new_cube: Cube) -> None:
         self._cube = new_cube
         self._value = self.calculateObjectiveValue()  # Recalculate value when cube is updated
         
     @property
-    def value(self):
+    def value(self) -> int:
         return self._value
 
     # Calculate objective value
