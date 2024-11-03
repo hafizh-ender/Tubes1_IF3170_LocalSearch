@@ -1,13 +1,13 @@
 from State import State
 from RandomRestartResult import RandomRestartResult
 from BaseAlgorithm import BaseAlgorithm
-from util import Utility
+from Utility import Utility
 
 from datetime import datetime
 
 class RandomRestart(BaseAlgorithm):
     @staticmethod
-    def solve(initial_state: State, max_restart: int = 20) -> RandomRestartResult:        
+    def solve(initial_state: State, max_restart: int = 20, verbose: bool = False) -> RandomRestartResult:        
         """
         This function take initial_state as the input
         and output the BaseResult object obtained using
@@ -25,7 +25,9 @@ class RandomRestart(BaseAlgorithm):
             current_state = initial_state
         
         while True:
-            print(current_state.value)
+            if verbose:
+                print(f"Iteration: {result.iteration}. Value: {current_state.value}. Restart: {result.restart}")
+            
             neighboor = Utility.getBestSuccessor(current_state)
 
             if neighboor.value <= current_state.value:

@@ -1,14 +1,14 @@
 from BaseAlgorithm import BaseAlgorithm
 from State import State
 from SidewaysMoveResult import SidewaysMoveResult
-from util import Utility
+from Utility import Utility
 
 from datetime import datetime
 
 
 class SidewaysMoveAlgorithm(BaseAlgorithm):
     @staticmethod
-    def solve(initial_state: State, max_sideways_iter: int = 250) -> SidewaysMoveResult:
+    def solve(initial_state: State, max_sideways_iter: int = 250, verbose: bool = False) -> SidewaysMoveResult:
         """
         This function take initial_state as the input
         and output the BaseResult object obtained using
@@ -27,7 +27,9 @@ class SidewaysMoveAlgorithm(BaseAlgorithm):
             current_state = initial_state
         
         while True:
-            print(current_state.value)
+            if verbose:
+                print(f"Iteration: {result.iteration}. Value: {current_state.value}. Sideways Move: {sideways_iter}")
+                
             neighboor = Utility.getBestSuccessor(current_state)
 
             if neighboor.value < current_state.value:

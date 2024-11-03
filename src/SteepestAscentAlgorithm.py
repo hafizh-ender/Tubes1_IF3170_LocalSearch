@@ -1,13 +1,13 @@
 from BaseAlgorithm import BaseAlgorithm
 from SteepestAscentResult import SteepestAscentResult
 from State import State
-from util import Utility
+from Utility import Utility
 
 from datetime import datetime
 
 class SteepestAscentAlgorithm(BaseAlgorithm):
     @staticmethod
-    def solve(initial_state: State):
+    def solve(initial_state: State, verbose: bool = False):
         """
         This function take initial_state as the input
         and output the BaseResult object obtained using
@@ -25,7 +25,9 @@ class SteepestAscentAlgorithm(BaseAlgorithm):
             current_state = initial_state
         
         while True:
-            print(current_state.value)
+            if verbose:
+                print(f"Iteration: {result.iteration}. Value: {current_state.value}")
+                
             neighboor = Utility.getBestSuccessor(current_state)
 
             if neighboor.value <= current_state.value:
