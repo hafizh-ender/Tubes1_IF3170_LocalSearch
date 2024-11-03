@@ -1,5 +1,97 @@
 import numpy as np
 
+from numba import njit
+
+@njit
+def calculateObjectiveValueNumba(dim, magic_number, cube) -> int:
+    conflict = 0
+    
+    # Check rows
+    for i in range(dim):
+        for k in range(dim):
+            sum_baris = np.sum(cube[i, :, k])
+            if sum_baris != magic_number:
+                conflict += 1
+    # Check columns
+    for j in range(dim):
+        for k in range(dim):
+            sum_kolom = np.sum(cube[:, j, k])
+            if sum_kolom != magic_number:
+                conflict += 1
+    # Check pillars
+    for i in range(dim):
+        for j in range(dim):
+            sum_tiang = np.sum(cube[i, j, :])
+            if sum_tiang != magic_number:
+                conflict += 1    
+    # note : 0 tuh backward and 1 tuh maju
+    # Check space diagonals
+    lower_corners = [[1, 1, 1], [0, 1, 1], [0, 0, 1], [1, 0, 1]]
+    for lower_corner in lower_corners:
+        sum_diag_ruang = 0
+        i_range = range(0, dim) if lower_corner[0] == 1 else range(dim - 1, -1, -1)
+        j_range = range(0, dim) if lower_corner[1] == 1 else range(dim - 1, -1, -1)
+        k_range = range(0, dim) if lower_corner[2] == 1 else range(dim - 1, -1, -1)
+        
+        for i, j, k in zip(i_range, j_range, k_range):
+            sum_diag_ruang += cube[i, j, k]
+        
+        if sum_diag_ruang != magic_number:
+            conflict += 1 
+    # Check plane diagonals
+    lower_corners = [[1, 1], [1, 0]]
+    for i in range(dim):
+        for lower_corner in lower_corners:
+            sum_diag_bidang = 0
+            for j, k in zip(range(0, dim) if lower_corner[0] == 1 else range(dim - 1, -1, -1),
+                            range(0, dim) if lower_corner[1] == 1 else range(dim - 1, -1, -1)):
+                sum_diag_bidang += cube[i, j, k]
+            if sum_diag_bidang != magic_number:
+                conflict += 1 
+    for j in range(dim):
+        for lower_corner in lower_corners:
+            sum_diag_bidang = 0
+            for i, k in zip(range(0, dim) if lower_corner[0] == 1 else range(dim - 1, -1, -1),
+                            range(0, dim) if lower_corner[1] == 1 else range(dim - 1, -1, -1)):
+                sum_diag_bidang += cube[i, j, k]
+            if sum_diag_bidang != magic_number:
+                conflict += 1 
+    for k in range(dim):
+        for lower_corner in lower_corners:
+            sum_diag_bidang = 0
+            for i, j in zip(range(0, dim) if lower_corner[0] == 1 else range(dim - 1, -1, -1),
+                            range(0, dim) if lower_corner[1] == 1 else range(dim - 1, -1, -1)):
+                sum_diag_bidang += cube[i, j, k]
+            if sum_diag_bidang != magic_number:
+                conflict += 1 
+    
+    return -conflict
+
+    # conflict = 0
+    
+    # # pillar, column, row
+    # conflict += np.sum(cube.sum(axis=0) != magic_number) # Check pillar
+    # conflict += np.sum(cube.sum(axis=1) != magic_number) # Check column
+    # conflict += np.sum(cube.sum(axis=2) != magic_number) # Check row
+    
+    # # plane diagonal
+    # conflict += np.sum(np.sum(np.diagonal(cube, axis1=1, axis2=2), axis=1) != magic_number) # Check column x row plane
+    # conflict += np.sum(np.sum(np.diagonal(cube, axis1=0, axis2=2), axis=1) != magic_number) # Check pillar x row plane
+    # conflict += np.sum(np.sum(np.diagonal(cube, axis1=0, axis2=1), axis=1) != magic_number) # Check pillar x column plane
+
+    # # plane anti-diagonal
+    # conflict += np.sum(np.sum(np.diagonal(np.flip(cube, axis=1), axis1=1, axis2=2), axis=1) != magic_number) # Check column x row plane
+    # conflict += np.sum(np.sum(np.diagonal(np.flip(cube, axis=0), axis1=0, axis2=2), axis=1) != magic_number) # Check pillar x row plane
+    # conflict += np.sum(np.sum(np.diagonal(np.flip(cube, axis=0), axis1=0, axis2=1), axis=1) != magic_number) # Check pillar x column plane
+
+    # # space diagonal
+    # conflict += np.sum(np.diagonal(np.diagonal(cube))) != magic_number # Check 0,0,0 to dim,dim,dim diagonal
+    # conflict += np.sum(np.diagonal(np.flip(np.diagonal(cube), axis=0)))!= magic_number # Check 0,0,dim to dim,dim,0
+    # conflict += np.sum(np.diagonal(np.diagonal(np.flip(cube, axis=1))))!= magic_number # Check dim,0,0 to 0,dim,dim
+    # conflict += np.sum(np.diagonal(np.flip(np.diagonal(np.flip(cube, axis=1)), axis=0)))!= magic_number # dim,0,dim to 0,dim,0
+
+    # return -conflict
+
 class State:
     def __init__(self, cube: np.ndarray = None, dim: int = 5):
         if cube is not None:
@@ -63,28 +155,5 @@ class State:
         dim = self.dim
         magic_number = self.magic_number
         cube = self.cube
-
-        conflict = 0
         
-        # pillar, column, row
-        conflict += np.sum(cube.sum(axis=0) != magic_number) # Check pillar
-        conflict += np.sum(cube.sum(axis=1) != magic_number) # Check column
-        conflict += np.sum(cube.sum(axis=2) != magic_number) # Check row
-        
-        # plane diagonal
-        conflict += np.sum(np.sum(np.diagonal(cube, axis1=1, axis2=2), axis=1) != magic_number) # Check column x row plane
-        conflict += np.sum(np.sum(np.diagonal(cube, axis1=0, axis2=2), axis=1) != magic_number) # Check pillar x row plane
-        conflict += np.sum(np.sum(np.diagonal(cube, axis1=0, axis2=1), axis=1) != magic_number) # Check pillar x column plane
-
-        # plane anti-diagonal
-        conflict += np.sum(np.sum(np.diagonal(np.flip(cube, axis=1), axis1=1, axis2=2), axis=1) != magic_number) # Check column x row plane
-        conflict += np.sum(np.sum(np.diagonal(np.flip(cube, axis=0), axis1=0, axis2=2), axis=1) != magic_number) # Check pillar x row plane
-        conflict += np.sum(np.sum(np.diagonal(np.flip(cube, axis=0), axis1=0, axis2=1), axis=1) != magic_number) # Check pillar x column plane
-
-        # space diagonal
-        conflict += np.sum(np.diagonal(np.diagonal(cube))) != magic_number # Check 0,0,0 to dim,dim,dim diagonal
-        conflict += np.sum(np.diagonal(np.flip(np.diagonal(cube), axis=0)))!= magic_number # Check 0,0,dim to dim,dim,0
-        conflict += np.sum(np.diagonal(np.diagonal(np.flip(cube, axis=1))))!= magic_number # Check dim,0,0 to 0,dim,dim
-        conflict += np.sum(np.diagonal(np.flip(np.diagonal(np.flip(cube, axis=1)), axis=0)))!= magic_number # dim,0,dim to 0,dim,0
-
-        return -conflict
+        return calculateObjectiveValueNumba(dim, magic_number, cube)
