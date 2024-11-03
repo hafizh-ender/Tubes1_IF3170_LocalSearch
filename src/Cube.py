@@ -7,7 +7,10 @@ class Cube():
             self._values = values
             self._dim = values.shape[0]
         else:
-            self._values = np.random.choice(range(1, dim**3 + 1), size=(dim, dim, dim))
+            self._values = np.arange(1, dim**3+1)
+            np.random.shuffle(self._values)
+            self._values = np.reshape(self._values, (dim, dim, dim))
+            
             self._dim = dim
         
         self._magic_number = self._dim * (self._dim**3 + 1) / 2
