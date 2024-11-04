@@ -52,9 +52,35 @@ In this repository, various local search algorithms will be implemented to solve
 
 ## How to Run
 ### Demo File
-You can run one of the demo files `main.py` [arvi ngisi]
+You can run one of the demo files `main.py`, or follow the following basic steps:
 
-### Video Player
+1. Import `State`, `BaseAlgorithm`, and your wanted-local-search algorithm (example: `SteepestAscentAlgorithm` for steepest-ascent hill climbing) to your Python file.
+2. Initialize a `State` object by specifying the dimension
+    ```py
+    start_state = State(dim=5)
+    ```
+    or by having a 3D `numpy.npdarray`
+    ```py
+    start_state = State(cube=numpy_array)
+    ```
+3. For genetic algorithm, you have to initiate few states and combine them into a list of states.
+    ```py
+    start_population = [State(dim=5), State(dim=5), State(dim=5), State(dim=5)]
+    ```
+4. Run the static method `solve` of the algorithm. For example:
+    ```py
+    steepest_ascent_hill_climbing_result = SteepestAscentAlgorithm.solve(initial_state=start_state,verbose=True)
+    ```
+    ```py
+    genetic_algorithm_result = GeneticAlgorithm.solve(initial_states=start_population, iteration_max=100000)
+    ```
+5. Print the result based on the class properties.
+6. For visualization, you can use the following:
+    ```py
+    BaseAlgorithm.visualize(steepest_ascent_hill_climbing_result)
+    BaseAlgorithm.visualize3D_subplots(steepest_ascent_hill_climbing_result)
+    ```
+
 ### Video Player
 1. Create an instance of "VideoPlayer"
 2. Set up the UI to show the UI
