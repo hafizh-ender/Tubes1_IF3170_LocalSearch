@@ -1,6 +1,7 @@
 from __future__ import annotations
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+import plotly.subplots as sp
 from BaseResult import BaseResult
 
 class BaseAlgorithm:
@@ -92,6 +93,70 @@ class BaseAlgorithm:
             yaxis=dict(visible=False, showgrid=False),
             zaxis=dict(visible=False, showgrid=False),
         ))
+
+        # Show the plot
+        fig.show()
+
+    @staticmethod
+    def visualize3D_subplots(result: BaseResult) -> None:
+        # First and last states
+        n1 = result.state_history[0].cube.values.shape[0]
+        values1 = result.state_history[0].cube.values
+
+        n2 = result.state_history[-1].cube.values.shape[0]
+        values2 = result.state_history[-1].cube.values
+
+        # Extract data for the first and last states
+        def extract_data(n, values):
+            x, y, z, text = [], [], [], []
+            for i in range(n):
+                for j in range(n):
+                    for k in range(n):
+                        x.append(i)
+                        y.append(j)
+                        z.append(k)
+                        text.append(str(values[i][j][k]))
+            return x, y, z, text
+
+        x1, y1, z1, text1 = extract_data(n1, values1)
+        x2, y2, z2, text2 = extract_data(n2, values2)
+
+        # Create subplots
+        fig = sp.make_subplots(rows=1, cols=2, specs=[[{'type': 'scatter3d'}, {'type': 'scatter3d'}]])
+
+        # Add traces for the initial state
+        fig.add_trace(go.Scatter3d(
+            x=x1, y=y1, z=z1,
+            mode='markers+text',
+            marker=dict(size=17, color='rgba(0, 51, 102, 0.9)', showscale=False),
+            text=text1,
+            textposition='middle center',
+            textfont=dict(size=15, color='yellow'),
+        ), row=1, col=1)
+
+        # Add traces for the final state
+        fig.add_trace(go.Scatter3d(
+            x=x2, y=y2, z=z2,
+            mode='markers+text',
+            marker=dict(size=17, color='rgba(102, 0, 51, 0.9)', showscale=False),
+            text=text2,
+            textposition='middle center',
+            textfont=dict(size=15, color='yellow'),
+        ), row=1, col=2)
+
+        # Update layout for both scenes
+        fig.update_layout(
+            scene=dict(
+                xaxis=dict(visible=False, showgrid=False),
+                yaxis=dict(visible=False, showgrid=False),
+                zaxis=dict(visible=False, showgrid=False),
+            ),
+            scene2=dict(
+                xaxis=dict(visible=False, showgrid=False),
+                yaxis=dict(visible=False, showgrid=False),
+                zaxis=dict(visible=False, showgrid=False),
+            )
+        )
 
         # Show the plot
         fig.show()
