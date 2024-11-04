@@ -15,6 +15,13 @@ class BaseResult:
         """Add state to history and record its objective value."""
         self._state_history.append(state)
         self._objective_function_history.append(state.value)
+
+    def find_best_state(self) -> State:
+        if not self._state_history:
+            raise ValueError("State history is empty. No best state found.")
+
+        best_state_index = self._state_history.index(max(self._objective_function_history))
+        return self._state_history[best_state_index]
         
     def export_history(self, filename: str = "state_history.txt") -> None:
         with open(filename, "w") as file:
