@@ -13,7 +13,7 @@ class Utility:
         neighbour_cube[coordinate1[0], coordinate1[1], coordinate1[2]] = value2
         neighbour_cube[coordinate2[0], coordinate2[1], coordinate2[2]] = value1
         
-        return State(cube=neighbour_cube)
+        return State(cube=neighbour_cube, previous_action=[coordinate1, coordinate2])
     
     @staticmethod
     def generateCoordinatePairs(dim: int) -> List[Tuple[List[int], List[int]]]:

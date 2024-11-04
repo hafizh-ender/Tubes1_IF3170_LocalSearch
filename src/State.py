@@ -1,4 +1,5 @@
 import numpy as np
+from typing import List
 
 from numba import njit
 
@@ -93,7 +94,7 @@ def calculateObjectiveValueNumba(dim, magic_number, cube) -> int:
     # return -conflict
 
 class State:
-    def __init__(self, cube: np.ndarray = None, dim: int = 5):
+    def __init__(self, cube: np.ndarray = None, previous_action: List[List[int]] = None, dim: int = 5):
         if cube is not None:
             self._cube = cube
             self._dim = cube.shape[0]
@@ -105,6 +106,7 @@ class State:
             
         self._magic_number = self._dim * (self._dim ** 3 + 1) / 2
         self._value = self.calculateObjectiveValue()
+        self._previous_action = previous_action
 
     def __lt__(self, other):
         return self._value < other._value
@@ -144,6 +146,14 @@ class State:
     def cube(self, new_cube: np.ndarray) -> None:
         self._cube = new_cube
         self._value = self.calculateObjectiveValue()  # Recalculate value when cube is updated
+
+    @property
+    def previous_action(self):
+        return self._previous_action
+
+    @previous_action.setter
+    def previous_action(self, new_previous_action: List[List[int]]):
+        self._previous_action = new_previous_action
         
     @property
     def value(self) -> int:
