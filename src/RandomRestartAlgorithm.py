@@ -7,7 +7,7 @@ from datetime import datetime
 
 class RandomRestart(BaseAlgorithm):
     @staticmethod
-    def solve(initial_state: State, max_restart: int = 20, verbose: bool = False) -> RandomRestartResult:        
+    def solve(initial_state: State, max_restart: int = 299, verbose: bool = False) -> RandomRestartResult:        
         """
         This function take initial_state as the input
         and output the BaseResult object obtained using
@@ -31,7 +31,7 @@ class RandomRestart(BaseAlgorithm):
             neighboor = Utility.getBestSuccessor(current_state)
 
             if neighboor.value <= current_state.value:
-                neighboor = Utility.getRandomSuccessor(current_state)
+                neighboor = State(dim=5)
                 result.restart += 1
 
             result.add_state(current_state)
