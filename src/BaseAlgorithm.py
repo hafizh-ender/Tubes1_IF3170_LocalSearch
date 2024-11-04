@@ -102,7 +102,9 @@ class BaseAlgorithm:
         # First and last states
         n = result.state_history[0].dim
         values1 = result.state_history[0].cube
-        values2 = result.find_best_state
+        best_state = result.best_state
+        print(best_state)
+        values2 = best_state.cube
 
         # Extract data for the first and last states
         def extract_data(n, values):
@@ -113,7 +115,8 @@ class BaseAlgorithm:
                         x.append(i)
                         y.append(j)
                         z.append(k)
-                        text.append(str(values[i][j][k]))
+                        text.append(str(values1[i][j][k]))
+                        text.append(str(values2[i][j][k]))
             return x, y, z, text
 
         x1, y1, z1, text1 = extract_data(n, values1)
@@ -163,7 +166,7 @@ class BaseAlgorithm:
                     x_plane3.append(j)
                     y_plane3.append(i)
                     z_plane3.append(k)
-
+            #def plot_line(x:List[int], y:List[int], z:List[int], width:int, color: str = 'blue')
                 #x dir line
                 fig.add_trace(go.Scatter3d(
                     x=x_plane1, y=y_plane1, z=z_plane1,
@@ -176,7 +179,7 @@ class BaseAlgorithm:
                     x=x_plane2, y=y_plane2, z=z_plane2,
                     mode='lines',
                     line=dict(color='blue', width=2)
-                    ))
+                    ), row = 1, col = 2)
 
                 #z dir line
                 fig.add_trace(go.Scatter3d(
