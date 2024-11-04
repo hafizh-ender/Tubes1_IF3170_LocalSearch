@@ -15,6 +15,18 @@ class BaseResult:
         """Add state to history and record its objective value."""
         self._state_history.append(state)
         self._objective_function_history.append(state.value)
+        
+    def export_history(self, filename: str = "state_history.txt") -> None:
+        with open(filename, "w") as file:
+            for i, (state, obj_value) in enumerate(zip(self._state_history, self._objective_function_history), start=1):
+                file.write(f"Iteration {i}:{obj_value}\n\n")
+                
+                cube = state.cube 
+                for frame in cube:
+                    for row in frame:
+                        file.write(" ".join(f"{val:.1f}" for val in row) + "\n")
+                    file.write("\n")
+                file.write("\n")
 
     @property
     def state_history(self) -> List[State]:
