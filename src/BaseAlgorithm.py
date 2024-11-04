@@ -101,9 +101,10 @@ class BaseAlgorithm:
     def visualize3D_subplots(result: BaseResult) -> None:
         # First and last states
         n = result.state_history[0].dim
-        values1 = result.state_history[0].cube
-        best_state = result.best_state
-        print(best_state)
+
+        initial_state = result.state_history[0]
+        values1 = initial_state.cube
+        best_state, best_obj = result.best_state
         values2 = best_state.cube
 
         # Extract data for the first and last states
@@ -123,7 +124,9 @@ class BaseAlgorithm:
         x2, y2, z2, text2 = extract_data(n, values2)
 
         # Create subplots
-        fig = sp.make_subplots(rows=1, cols=2, specs=[[{'type': 'scatter3d'}, {'type': 'scatter3d'}]])
+        fig = sp.make_subplots(rows=1, cols=2, specs=[[{'type': 'scatter3d'}, {'type': 'scatter3d'}]],
+                               subplot_titles=(f"<span style='font-size:24px'><b>Initial State</b></span><br>Objective value: {result.objective_function_history[0]}",
+                                               f"<span style='font-size:24px'><b>Final State</b></span><br>Objective value: {best_obj}"))
 
         # Add traces for the initial state
         fig.add_trace(go.Scatter3d(
@@ -166,29 +169,45 @@ class BaseAlgorithm:
                     x_plane3.append(j)
                     y_plane3.append(i)
                     z_plane3.append(k)
-            #def plot_line(x:List[int], y:List[int], z:List[int], width:int, color: str = 'blue')
-                #x dir line
+
+                # x-direction line for both subplots
                 fig.add_trace(go.Scatter3d(
                     x=x_plane1, y=y_plane1, z=z_plane1,
                     mode='lines',
                     line=dict(color='blue', width=2)
-                    ))
+                ), row=1, col=1)
 
-                #y dir line
+                fig.add_trace(go.Scatter3d(
+                    x=x_plane1, y=y_plane1, z=z_plane1,
+                    mode='lines',
+                    line=dict(color='blue', width=2)
+                ), row=1, col=2)
+
+                # y-direction line for both subplots
                 fig.add_trace(go.Scatter3d(
                     x=x_plane2, y=y_plane2, z=z_plane2,
                     mode='lines',
                     line=dict(color='blue', width=2)
-                    ), row = 1, col = 2)
+                ), row=1, col=1)
 
-                #z dir line
+                fig.add_trace(go.Scatter3d(
+                    x=x_plane2, y=y_plane2, z=z_plane2,
+                    mode='lines',
+                    line=dict(color='blue', width=2)
+                ), row=1, col=2)
+
+                # z-direction line for both subplots
                 fig.add_trace(go.Scatter3d(
                     x=x_plane3, y=y_plane3, z=z_plane3,
                     mode='lines',
                     line=dict(color='blue', width=2),
-                    name=f'Plane x={i}'
-                    ))
+                ), row=1, col=1)
 
+                fig.add_trace(go.Scatter3d(
+                    x=x_plane3, y=y_plane3, z=z_plane3,
+                    mode='lines',
+                    line=dict(color='blue', width=2)
+                ), row=1, col=2)
         # Update layout for both scenes
         fig.update_layout(
             scene=dict(
@@ -200,7 +219,8 @@ class BaseAlgorithm:
                 xaxis=dict(visible=False, showgrid=False),
                 yaxis=dict(visible=False, showgrid=False),
                 zaxis=dict(visible=False, showgrid=False),
-            )
+            ),
+            showlegend=False
         )
 
         # Show the plot
