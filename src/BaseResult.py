@@ -50,12 +50,12 @@ class BaseResult:
         return self._iteration
 
     @property
-    def best_state(self) -> State:
+    def best_state(self) -> tuple[State,int]:
         if not self._state_history:
             raise ValueError("State history is empty. No best state found.")
         best_state_index = self._objective_function_history.index(max(self.objective_function_history))
 
-        return self._state_history[best_state_index]
+        return self._state_history[best_state_index], self._objective_function_history[best_state_index]
 
     @iteration.setter
     def iteration(self, value: int) -> None:
