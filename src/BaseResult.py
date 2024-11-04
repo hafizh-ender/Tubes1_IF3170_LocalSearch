@@ -26,7 +26,7 @@ class BaseResult:
         with open(filename, "w") as file:
             for i, (state, obj_value) in enumerate(zip(self._state_history, self._objective_function_history), start=1):
                 file.write(f"Iteration {i}:{obj_value}:None:None\n\n" if state.previous_action is None
-                           else f"Iteration {i}:{obj_value}:{"-".join(map(str, state.previous_action[0]))}:{"-".join(map(str, state.previous_action[1]))}\n\n")
+                           else f"Iteration {i}:{obj_value}:{'-'.join(map(str, state.previous_action[0]))}:{'-'.join(map(str, state.previous_action[1]))}\n\n")
 
                 cube = state.cube 
                 for frame in cube:
