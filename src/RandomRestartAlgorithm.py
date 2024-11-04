@@ -2,12 +2,13 @@ from State import State
 from RandomRestartResult import RandomRestartResult
 from BaseAlgorithm import BaseAlgorithm
 from util import Utility
+from Cube import Cube
 
 from datetime import datetime
 
 class RandomRestart(BaseAlgorithm):
     @staticmethod
-    def solve(initial_state: State, max_restart: int = 20) -> RandomRestartResult:        
+    def solve(initial_state: State, max_restart: int = 299) -> RandomRestartResult:        
         """
         This function take initial_state as the input
         and output the BaseResult object obtained using
@@ -29,7 +30,8 @@ class RandomRestart(BaseAlgorithm):
             neighboor = Utility.getBestSuccessor(current_state)
 
             if neighboor.value <= current_state.value:
-                neighboor = Utility.getRandomSuccessor(current_state)
+                cube = Cube(dim=5)
+                current_state = State(cube = cube)
                 result.restart += 1
 
             result.add_state(current_state)
