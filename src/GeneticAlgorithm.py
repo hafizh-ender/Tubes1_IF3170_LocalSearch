@@ -53,19 +53,19 @@ class GeneticAlgorithm(BaseAlgorithm):
         n_population = len(initial_states)
         result = GeneticAlgorithmResult(n_population=n_population)
         
-        for iteration in range(iteration_max):
+        while True:
             current_population.sort(reverse=True)
             fittest_individual = current_population[0]
+            
             if verbose:
-                print(f"Iteration: {iteration}. Value: {fittest_individual.state.value}")
+                print(f"Iteration: {result.iteration}. Value: {fittest_individual.state.value}")
             
             result.add_state(state=fittest_individual.state, population=[individual.state for individual in current_population])
             
-            if fittest_individual.is_fitness_value_maximum():
+            # Terminate if global maximum is reached or maximum iteration is reached
+            if fittest_individual.is_fitness_value_maximum() or result.iteration == iteration_max:
                 duration = datetime.now() - start_time
                 result.duration = duration.total_seconds()
-                
-                result.iteration = iteration
                 
                 return result
             
@@ -91,13 +91,8 @@ class GeneticAlgorithm(BaseAlgorithm):
             
             if (not hill_climbing_heuristic) or (new_population[0].fitness_value > current_population[0].fitness_value):
                 current_population = new_population
-        
-        duration = datetime.now() - start_time
-        result.duration = duration.total_seconds()
-
-        result.iteration = iteration
-        
-        return result
+            
+            result.iteration += 1
 
     @staticmethod
     def chooseParent(population: List[Individual]) -> Individual:

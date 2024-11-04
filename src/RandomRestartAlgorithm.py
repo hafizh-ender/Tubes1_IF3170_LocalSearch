@@ -14,32 +14,36 @@ class RandomRestart(BaseAlgorithm):
         random restart algorithm
         """
         start_time = datetime.now()
+        
+        current_state = initial_state
         result = RandomRestartResult()
-
-        if initial_state.value == 0:
-            duration = datetime.now() - start_time
-            result.add_state(initial_state)
-            result.duration = duration.total_seconds()
-            return result
-        else:
-            current_state = initial_state
         
         while True:
             if verbose:
                 print(f"Iteration: {result.iteration}. Value: {current_state.value}. Restart: {result.restart}")
             
+            result.add_state(current_state)
+            
+            # Terminate if global maximum is reached
+            if current_state.value == 0:
+                duration = datetime.now() - start_time
+                result.duration = duration.total_seconds()
+                
+                return result 
+            
             neighboor = Utility.getBestSuccessor(current_state)
 
             if neighboor.value <= current_state.value:
-                neighboor = State(dim=5)
-                result.restart += 1
+                # Terminate if no neighbor is better and maximum restart has concluded
+                if result.restart == max_restart:
+                    duration = datetime.now() - start_time
+                    result.duration = duration.total_seconds()
+                    
+                    return result 
+                else:
+                    neighboor = State(dim=5)
+                    
+                    result.restart += 1
 
-            result.add_state(current_state)
             current_state = neighboor
             result.iteration += 1 
-            
-            #Global maximum 
-            if current_state.value == 0 or result.restart == max_restart:
-                duration = datetime.now() - start_time
-                result.duration = duration.total_seconds()
-                return result

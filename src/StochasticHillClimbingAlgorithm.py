@@ -15,20 +15,22 @@ class StochasticHillClimbingAlgorithm(BaseAlgorithm):
         current_state = initial_state
         result = StochasticHillClimbingResult()
         
-        for iteration in range(iteration_max):
+        while True:
             if verbose:
-                print(f"Iteration: {iteration}. Value: {current_state.value}")
+                print(f"Iteration: {result.iteration}. Value: {current_state.value}")
             
             result.add_state(state=current_state)
+            
+            # Terminate if global maximum is reached or maximum iteration is reached
+            if current_state.value == 0 or result.iteration == iteration_max:
+                duration = datetime.now() - start_time
+                result.duration = duration.total_seconds()
+                
+                return result
             
             neighbour_state = Utility.getRandomSuccessor(current_state)
             
             if neighbour_state.value > current_state.value:
                 current_state = neighbour_state
-                
-        duration = datetime.now() - start_time
-        result.duration = duration.total_seconds()
-        
-        result.iteration = iteration
-        
-        return result
+            
+            result.iteration += 1

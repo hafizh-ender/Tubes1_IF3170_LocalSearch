@@ -14,33 +14,32 @@ class SteepestAscentAlgorithm(BaseAlgorithm):
         steepest ascent algorithm
         """
         start_time = datetime.now()
+        
+        current_state = initial_state
         result = SteepestAscentResult()
-
-        if initial_state.value == 0:
-            duration = datetime.now() - start_time
-            result.add_state(initial_state)
-            result.duration = duration.total_seconds()
-            return result
-        else:
-            current_state = initial_state
         
         while True:
             if verbose:
                 print(f"Iteration: {result.iteration}. Value: {current_state.value}")
+            
+            result.add_state(current_state)
+            
+            # Terminate if global maximum is reached
+            if current_state.value == 0:
+                duration = datetime.now() - start_time
+                result.duration = duration.total_seconds()
+                
+                return result
                 
             neighboor = Utility.getBestSuccessor(current_state)
 
             if neighboor.value <= current_state.value:
+                # Terminate if no neighbor is better
                 duration = datetime.now() - start_time
                 result.duration = duration.total_seconds()
+                
                 return result
-
-            result.add_state(current_state)
+            
             current_state = neighboor
             result.iteration += 1
             
-            #Global maximum 
-            if current_state.value == 0:
-                duration = datetime.now() - start_time
-                result.duration = duration.total_seconds()
-                return result
