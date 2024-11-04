@@ -18,8 +18,8 @@ class BaseAlgorithm:
 
     @staticmethod
     def visualize3D(result:BaseResult) -> None:
-        n = result.state_history[-1].cube.values.shape[0]
-        values = result.state_history[-1].cube.values
+        n = result.state_history[-1].dim
+        values = result.state_history[-1].cube
 
         x,y,z = [], [], []
         text = []
@@ -100,11 +100,9 @@ class BaseAlgorithm:
     @staticmethod
     def visualize3D_subplots(result: BaseResult) -> None:
         # First and last states
-        n1 = result.state_history[0].cube.values.shape[0]
-        values1 = result.state_history[0].cube.values
-
-        n2 = result.state_history[-1].cube.values.shape[0]
-        values2 = result.state_history[-1].cube.values
+        n = result.state_history[0].dim
+        values1 = result.state_history[0].cube
+        values2 = result.find_best_state
 
         # Extract data for the first and last states
         def extract_data(n, values):
@@ -118,8 +116,8 @@ class BaseAlgorithm:
                         text.append(str(values[i][j][k]))
             return x, y, z, text
 
-        x1, y1, z1, text1 = extract_data(n1, values1)
-        x2, y2, z2, text2 = extract_data(n2, values2)
+        x1, y1, z1, text1 = extract_data(n, values1)
+        x2, y2, z2, text2 = extract_data(n, values2)
 
         # Create subplots
         fig = sp.make_subplots(rows=1, cols=2, specs=[[{'type': 'scatter3d'}, {'type': 'scatter3d'}]])
@@ -143,6 +141,50 @@ class BaseAlgorithm:
             textposition='middle center',
             textfont=dict(size=15, color='yellow'),
         ), row=1, col=2)
+
+        # Adding lines connecting dots in each x-plane
+        for i in range(n):
+            for j in range(n):
+                x_plane1, y_plane1, z_plane1 = [], [], []
+                x_plane2, y_plane2, z_plane2 = [], [], []
+                x_plane3, y_plane3, z_plane3 = [], [], []
+                for k in range(n):
+                    #x dir
+                    x_plane1.append(k)
+                    y_plane1.append(j)
+                    z_plane1.append(i)
+
+                    #y dir
+                    x_plane2.append(j)
+                    y_plane2.append(k)
+                    z_plane2.append(i)
+
+                    #z dir
+                    x_plane3.append(j)
+                    y_plane3.append(i)
+                    z_plane3.append(k)
+
+                #x dir line
+                fig.add_trace(go.Scatter3d(
+                    x=x_plane1, y=y_plane1, z=z_plane1,
+                    mode='lines',
+                    line=dict(color='blue', width=2)
+                    ))
+
+                #y dir line
+                fig.add_trace(go.Scatter3d(
+                    x=x_plane2, y=y_plane2, z=z_plane2,
+                    mode='lines',
+                    line=dict(color='blue', width=2)
+                    ))
+
+                #z dir line
+                fig.add_trace(go.Scatter3d(
+                    x=x_plane3, y=y_plane3, z=z_plane3,
+                    mode='lines',
+                    line=dict(color='blue', width=2),
+                    name=f'Plane x={i}'
+                    ))
 
         # Update layout for both scenes
         fig.update_layout(
