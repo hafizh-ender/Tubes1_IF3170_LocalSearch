@@ -7,8 +7,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 
 
 class VideoPlayer:
-    def __init__(self, root):
-        self.root = root
+    def __init__(self):
+        self.root = tk.Tk()
         self.root.title("Local Search Video Player")
         self.root.geometry("1000x1000")
 
@@ -23,6 +23,7 @@ class VideoPlayer:
         self.speed = 1.0
         self.orientation = "Interactive"
 
+    def setup_ui(self):
         self.setup_ui()
 
     def play_button_handler(self):
@@ -242,8 +243,3 @@ class VideoPlayer:
         toolbar = NavigationToolbar2Tk(self.canvas, fig_frame)
         toolbar.update()
         toolbar.pack(side=tk.TOP, fill=tk.X)
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    player = VideoPlayer(root)
-    root.mainloop()

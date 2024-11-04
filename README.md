@@ -55,4 +55,13 @@ In this repository, various local search algorithms will be implemented to solve
 You can run one of the demo files `main.py` [arvi ngisi]
 
 ### Video Player
-[fadli ngisi]
+### Video Player
+1. Create an instance of "VideoPlayer"
+2. Set up the UI to show the UI
+3. Import the corresponding .txt file containing the experiment result
+4. Toggle the play/pause button if needed
+5. Adjust the playback speed according to your preference
+6. Adjust the progress if needed
+7. Adjust the view of the cube to switch between different view orientations
+
+You can run the demo file video_player_demo.py
